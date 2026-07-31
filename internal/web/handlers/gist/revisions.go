@@ -13,7 +13,7 @@ func Revisions(ctx *context.Context) error {
 
 	pageInt := handlers.GetPage(ctx)
 
-	commits, err := gist.Log("HEAD", (pageInt-1)*10, 11)
+	commits, err := gist.Log("HEAD", (pageInt-1)*10, 11, true)
 	if err != nil {
 		return ctx.ErrorRes(500, "Error fetching commits log", err)
 	}

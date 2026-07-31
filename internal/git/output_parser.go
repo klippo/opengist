@@ -150,6 +150,7 @@ loopLog:
 			line, err = input.ReadString('\n')
 			if err != nil {
 				if err == io.EOF {
+					commits = append(commits, currentCommit)
 					break loopLog
 				}
 				return commits, err

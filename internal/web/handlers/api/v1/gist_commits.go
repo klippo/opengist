@@ -25,7 +25,7 @@ func ListCommits(ctx *context.Context) error {
 
 	// Fetch one extra row as the peek-next sentinel: a slice of perPage+1
 	// tells us there's another page worth fetching.
-	commits, err := g.Log("HEAD", (page-1)*perPage, perPage+1)
+	commits, err := g.Log("HEAD", (page-1)*perPage, perPage+1, false)
 	if err != nil {
 		return ctx.ErrorJson(500, "failed to read commit log", err)
 	}

@@ -87,7 +87,7 @@ func (gist *Gist) ToAPI(baseURL string, revision string) (types.Gist, error) {
 		forksMap = append(forksMap, fork.ToAPISimple(baseURL))
 	}
 
-	logCommits, err := gist.Log(revision, 0, 10)
+	logCommits, err := gist.Log(revision, 0, 10, false)
 	if err != nil {
 		return types.Gist{}, err
 	}

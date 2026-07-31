@@ -333,24 +333,26 @@ func GetFileSize(user string, gist string, revision string, filename string) (ui
 // specific SHA), skipping `skip` rows from the top of the walk and limited
 // to `limit` rows. Pass "HEAD" for the gist's full history; pass a SHA to
 // see the history ending at (and including) that commit.
-func GetLog(user string, gist string, revision string, skip int, limit int) ([]*Commit, error) {
+// withDiff controls whether the full patch diff is included (-p). Pass false
+// when only shortstat counts are needed (API responses); pass true for the
+// web UI revision view where diffs are displayed.
+func GetLog(user string, gist string, revision string, skip int, limit int, withDiff bool) ([]*Commit, error) {
 	repositoryPath := RepositoryPath(user, gist)
 
-	cmd := exec.Command(
-		"git",
-		"--no-pager",
-		"log",
-		"-n",
-		strconv.Itoa(limit),
+	args := []string{
+		"--no-pager", "log",
+		"-n", strconv.Itoa(limit),
 		"--no-color",
-		"-p",
-		"--skip",
-		strconv.Itoa(skip),
+		"--skip", strconv.Itoa(skip),
 		"--format=format:c %H%na %aN%nm %ae%nt %at",
 		"--shortstat",
-		"--end-of-options",
-		revision,
-	)
+	}
+	if withDiff {
+		args = append(args, "-p")
+	}
+	args = append(args, "--end-of-options", revision)
+
+	cmd := exec.Command("git", args...)
 	cmd.Dir = repositoryPath
 	stdout, _ := cmd.StdoutPipe()
 	err := cmd.Start()

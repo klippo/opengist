@@ -805,8 +805,8 @@ type GistCommit struct {
 // emails. `skip` is the number of commits to skip from the top of the walk
 // (use offset*per_page for paging); `limit` caps the returned slice (pass
 // per_page+1 to enable the peek-next sentinel trick).
-func (gist *Gist) Log(revision string, skip int, limit int) ([]*GistCommit, error) {
-	raw, err := git.GetLog(gist.User.Username, gist.Uuid, revision, skip, limit)
+func (gist *Gist) Log(revision string, skip int, limit int, withDiff bool) ([]*GistCommit, error) {
+	raw, err := git.GetLog(gist.User.Username, gist.Uuid, revision, skip, limit, withDiff)
 	if err != nil {
 		return nil, err
 	}
